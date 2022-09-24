@@ -308,7 +308,7 @@
     {
         "name": "kMDItemSubject",
         "description": "Subject of the this item.",
-        "type": "Type is a CFString",
+        "type": "CFString",
         "version": "macOS 10.4+"
     },
     {
@@ -320,13 +320,13 @@
     {
         "name": "kMDItemFSHasCustomIcon",
         "description": "Boolean indicating if this file has a custom icon.",
-        "type": "Type is a CFBoolean",
+        "type": "CFBoolean",
         "version": "macOS 10.4+"
     },
     {
         "name": "kMDItemFSIsStationery",
         "description": "Boolean indicating if this file is stationery.",
-        "type": "Type is a CFBoolean",
+        "type": "CFBoolean",
         "version": "macOS 10.4+"
     },
     {

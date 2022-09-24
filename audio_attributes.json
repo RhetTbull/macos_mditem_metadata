@@ -44,7 +44,7 @@
     {
         "name": "kMDItemAudioTrackNumber",
         "description": "The track number of a song or composition when it is part of an album.",
-        "type": "CFNumber (integer)",
+        "type": "CFNumber",
         "version": "macOS 10.4+"
     },
     {
