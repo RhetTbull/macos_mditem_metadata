@@ -7,6 +7,7 @@
 # Copy the text that looks like:
 #   kMDItemAttributeChangeDate
 #   The date and time of the last change made to a metadata attribute. A CFDate.
+#   macOS 10.4+
 # This script will detect the text on clipboard and extract the data from the copied text.
 # The script will then write the data to constants.json
 
