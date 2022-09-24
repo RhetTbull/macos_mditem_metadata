@@ -1,0 +1,3 @@
+pyperclip
+pyobjc-core
+pyobjc-framework-CoreServices
