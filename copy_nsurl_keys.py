@@ -1,21 +1,21 @@
-"""Copy constants from https://developer.apple.com/documentation/coreservices/file_metadata/mditem/common_metadata_attribute_keys?language=objc"""
+"""Copy NSURL Resource Key constants from https://developer.apple.com/documentation/foundation/nsurlresourcekey"""
 
 # To use this:
 # Open the URL above in a browser
 # Run the script
-# Click on every item in the "Common Metadata Attribute Keys" section
+# Click on every item in the "NSURLResourceKey" section
 # Copy the text that looks like:
-#   kMDItemAttributeChangeDate
-#   The date and time of the last change made to a metadata attribute. A CFDate.
-#   macOS 10.4+
+#   NSURLIsDirectoryKey
+#   Key for determining whether the resource is a directory, returned as a Boolean NSNumber object (read-only).
+#   iOS 4.0+ iPadOS 4.0+ macOS 10.6+ Mac Catalyst 13.1+ tvOS 9.0+ watchOS 2.0+ 
 # This script will detect the text on clipboard and extract the data from the copied text.
 # The script will then write the data to constants.json
 
 import json
+import re
 import sys
 import time
 from typing import Dict
-import re
 
 import pyperclip
 
@@ -32,50 +32,25 @@ def unidequote(s: str) -> str:
 def extract_data(buffer: str) -> Dict[str, str]:
     """Extract data from buffer. Buffer expected to be in format:
 
-    kMDItemAttributeChangeDate
-    The date and time of the last change made to a metadata attribute. A CFDate.
-    macOS 10.4+
+    NSURLIsDirectoryKey
+    Key for determining whether the resource is a directory, returned as a Boolean NSNumber object (read-only).
+    iOS 4.0+ iPadOS 4.0+ macOS 10.6+ Mac Catalyst 13.1+ tvOS 9.0+ watchOS 2.0+ 
 
-    Some lines don't have a type.
+    Some records don't have a description (2nd line)
     """
     lines = buffer.splitlines()
-    if len(lines) != 3:
+    if 1 < len(lines) > 3:
         return None
 
     # name
-    if not lines[0].startswith("kMDItem"):
+    if not lines[0].endswith("Key"):
         return None
     data = {"name": lines[0].strip()}
 
-    # description and type
-    # would like to split on '. ' but some of the descriptions on Apple's site
-    # don't include a space after the period
-    descr_type = [l.strip() for l in lines[1].split(".")]
-    if len(descr_type) < 2:
-        return None
-    if not descr_type[-1]:
-        # remove empty string at end
-        descr_type.pop()
+    data["description"] = unidequote(lines[1].strip()) if len(lines) == 3 else ""
 
-    # some descriptions don't have a type
-    if len(descr_type) == 1:
-        descr_type.append("")  # no type
-
-    # adding stripped period to end of description
-    descr_type[-2] = f"{descr_type[-2]}."
-    data["description"] = ". ".join(unidequote(d) for d in descr_type[:-1])
-
-    data["type"] = descr_type[-1]
-    # data type is in form 'A CFDate' or 'A CFString' or 'An CFArray of CFString'
-    if data["type"].startswith("A "):
-        data["type"] = data["type"][2:]
-    elif data["type"].startswith("An "):
-        data["type"] = data["type"][3:]
-    elif not data["type"]:
-        data["type"] = None
-
-    # macOS version
-    data["version"] = lines[2].strip()
+    # line 3 is availability
+    data["version"] = unidequote(lines[-1].strip())
 
     return data
 
